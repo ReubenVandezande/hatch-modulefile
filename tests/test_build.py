@@ -11,7 +11,7 @@ from .utils import build_project, install_project
 def test_modulefile(new_project: Path):
     build_project()
     install_project()
-
+    
     modulefile = new_project.joinpath("build", "modulefiles", "my_app")
     assert modulefile.exists()
 

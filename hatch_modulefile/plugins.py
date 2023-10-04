@@ -32,7 +32,10 @@ class ModulefileBuildHook(BuildHookInterface):
 
         project_name = self.build_config.builder.metadata.core.name.replace("-", "_")
         modulefile_path = self.generate_modulefile()
-        file_name = f"/modulefiles/{project_name}"
+        file_name = f"modulefiles/{project_name}"
+
+        # Would like this eventually!
+        # build_data['extra_metadata']['shared-data'] = [{str(modulefile_path): "modulefiles/module"}]
 
         if version == "editable":  # no cov
             build_data["force_include_editable"][str(modulefile_path)] = file_name
