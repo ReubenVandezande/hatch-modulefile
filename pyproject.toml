@@ -33,6 +33,54 @@ Source = "https://github.com/rvandezande/hatch-modulefile"
 [project.entry-points.hatch]
 modulefile = "hatch_modulefile.hooks"
 
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+  "pytest-mock",
+  "build[virtualenv]",
+]
+system-packages = true
+dev_mode = true
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report --show-missing",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+[tool.hatch.version]
+path = "hatch_modulefile/__about__.py"
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.7"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+  "black>=22.10.0",
+  "ruff>=0.0.166",
+]
+[tool.hatch.envs.lint.scripts]
+style = [
+  "ruff {args:.}",
+  "black --check --diff {args:.}",
+]
+fmt = [
+  "black {args:.}",
+  "ruff --fix {args:.}",
+  "style",
+]
+all = [
+  "style",
+]
+
 [tool.black]
 target-version = ["py37"]
 line-length = 120
