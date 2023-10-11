@@ -108,7 +108,7 @@ set              venv                    [file dirname [file dirname [file dirna
 
 # Standard python path requirements
 prepend-path	 PATH $venv/bin
-append-path      PYTHONPATH              $build/lib/python{python_version}/site-packages
+append-path      PYTHONPATH              $venv/lib/python{python_version}/site-packages
 setenv		     PYTHON_ROOT $venv
 {extra_paths_string}
 
