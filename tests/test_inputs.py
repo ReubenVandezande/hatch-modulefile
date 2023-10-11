@@ -6,7 +6,7 @@ from hatch_modulefile.inputs import ModulefileInputs
 
 INPUTS_WITH_EXTRAS = {
     "requires": ["test"],
-    "extra_paths": [{"type": "setenv", "variable": "QT_XCB_GL_INTEGRATION", "value": "none"}],
+    "extra-paths": [{"type": "setenv", "variable": "QT_XCB_GL_INTEGRATION", "value": "none"}],
 }
 
 INPUTS_WITH_MODULEFILE = {
@@ -14,7 +14,7 @@ INPUTS_WITH_MODULEFILE = {
 }
 INPUTS_WITH_EXTRAS_AND_MODULEFILE = {
     "requires": ["test"],
-    "extra_paths": [{"type": "setenv", "variable": "QT_XCB_GL_INTEGRATION", "value": "none"}],
+    "extra-paths": [{"type": "setenv", "variable": "QT_XCB_GL_INTEGRATION", "value": "none"}],
     "modulefile_path": "custom_modulefile",
 }
 
@@ -24,7 +24,7 @@ ROOT_DIRECTORY = Path(__file__).parent
 def test_read_inputs_extras():
     inputs = ModulefileInputs(INPUTS_WITH_EXTRAS, ROOT_DIRECTORY)
     assert inputs.requires == INPUTS_WITH_EXTRAS["requires"]
-    assert inputs.extra_paths == INPUTS_WITH_EXTRAS["extra_paths"]
+    assert inputs.extra_paths == INPUTS_WITH_EXTRAS["extra-paths"]
     assert inputs.modulefile_path is None
 
 

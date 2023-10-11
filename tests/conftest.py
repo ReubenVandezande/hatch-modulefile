@@ -54,7 +54,7 @@ requires = [
     "python/3.7",
     "my_module"
 ]
-extra_paths = [
+extra-paths = [
     {{type="setenv", variable="QT_XCB_GL_INTEGRATION", value="none"}},
     {{type="prepend-path", variable="PATH", value="/my/custom/path"}},
     {{type="append-path", variable="OTHER_VARIABLE", value="/my/custom/path2"}}

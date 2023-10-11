@@ -4,15 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from .utils import build_project, install_project
+from .utils import build_project, install_project_venv
 
 
 @pytest.mark.slow
 def test_modulefile(new_project: Path):
     build_project()
-    install_project()
-    
-    modulefile = new_project.joinpath("build", "modulefiles", "my_app")
+    install_directory = install_project_venv()
+
+    modulefile = install_directory.joinpath("lib", "python3.7", "site-packages", "modulefiles", "my_app") # TODO: hard coded for python/3.7
     assert modulefile.exists()
 
     text = modulefile.read_text()

@@ -93,7 +93,7 @@ class ModulefileInputs:
 
     @property
     def extra_paths(self) -> list[str]:
-        return self.inputs.get("extra_paths", [])
+        return self.inputs.get("extra-paths", [])
 
     @property
     def modulefile_path(self):
