@@ -101,14 +101,14 @@ class ModulefileInputs:
         if path:
             return self.root_directory.joinpath(path).resolve()
 
-
 MODULEFILE_TEMPLATE = """#%Module
 
 # Gets the folder two folders up from this file
-set             venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
+set              venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
 
 # Standard python path requirements
 prepend-path	 PATH $venv/bin
+append-path      PYTHONPATH              $build/lib/python{python_version}/site-packages
 setenv		     PYTHON_ROOT $venv
 {extra_paths_string}
 
