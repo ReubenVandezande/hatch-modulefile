@@ -106,12 +106,6 @@ MODULEFILE_TEMPLATE = """#%Module
 # Gets the folder two folders up from this file
 set              venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
 
-# Standard python path requirements
-prepend-path	 PATH $venv/bin
-append-path      PYTHONPATH              $venv/lib/python{python_version}/site-packages
-setenv		     PYTHON_ROOT $venv
-{extra_paths_string}
-
 set     necessary       {{
 \t{requires_string}
 }}
@@ -125,6 +119,14 @@ foreach mod $necessary {{
 \t\tmodule load $mod
 \t}}
 }}
+
+# Standard python path requirements
+# Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work 
+# when loading multiple venv modulefiles
+prepend-path	 PATH                    $venv/bin
+append-path      PYTHON_SITE_PACKAGES    $venv/lib/python{python_version}/site-packages
+append-path	     PYTHONPATH              $venv/lib/python{python_version}/site-packages
+{extra_paths_string}
 
 """  # noqa: E501
 

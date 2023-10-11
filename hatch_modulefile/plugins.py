@@ -41,6 +41,13 @@ class ModulefileBuildHook(BuildHookInterface):
         else:
             build_data["force_include"][str(modulefile_path)] = file_name
 
+        # Add sitecustomize file to force multiple site-packages to load
+        site_customize_path = Path(__file__).parent.joinpath("_sitecustomize.py")
+        if version == "editable":  # no cov
+            build_data["force_include_editable"][str(site_customize_path)] = "sitecustomize.py"
+        else:
+            build_data["force_include"][str(site_customize_path)] = "sitecustomize.py"
+
     def generate_modulefile(self) -> Path:
         """Generate a modulefile from pyproject.toml inputs
 
