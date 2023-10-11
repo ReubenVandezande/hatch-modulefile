@@ -30,7 +30,7 @@ class ModulefileBuildHook(BuildHookInterface):
         if self.target_name != "wheel":
             return
 
-        project_name = self.build_config.builder.metadata.core.name.replace("-", "_")
+        project_name = self.build_config.builder.metadata.core.name
         modulefile_path = self.generate_modulefile()
         file_name = f"modulefiles/{project_name}"
         # Would like this eventually!
