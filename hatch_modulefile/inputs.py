@@ -11,14 +11,22 @@ class ModulefileInputs:
 
         self.validate()
 
-    def generate_modulefile_string(self) -> str:
+    def generate_modulefile_string(self, python_version: str | None=None) -> str:
         """Generates a modulefile and returns a string ready to write to file.
+
+        Parameters
+        ----------
+        python_version : str | None
+            Python version string (X.Y)
 
         Returns
         -------
         str
             Modulefile inputs
         """
+        if python_version is None:
+            python_version = platform.python_version().rsplit(".", 1)[0]
+
         return MODULEFILE_TEMPLATE.format(
             python_version=platform.python_version().rsplit(".", 1)[0],
             requires_string=self.get_requires_string(),
