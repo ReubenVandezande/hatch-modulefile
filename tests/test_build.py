@@ -60,7 +60,6 @@ def test_modulefile_no_site_customize(new_project_no_site_customize: Path):
     assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
     assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
     assert get_setting(text, "append-path") == [
-        ["PYTHON_SITE_PACKAGES", "$venv/lib/python3.7/site-packages"],
         ["PYTHONPATH", "$venv/lib/python3.7/site-packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"]
     ]
