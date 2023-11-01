@@ -27,11 +27,33 @@ class ModulefileInputs:
         if python_version is None:
             python_version = platform.python_version().rsplit(".", 1)[0]
 
+        if self.site_customize:
+            site_customize_string = self.get_site_customize_string()
+        else:
+            site_customize_string = ""
+
         return MODULEFILE_TEMPLATE.format(
             python_version=platform.python_version().rsplit(".", 1)[0],
             requires_string=self.get_requires_string(),
+            site_customize_string=site_customize_string,
             extra_paths_string=self.get_extra_paths_string(),
         )
+
+    @staticmethod
+    def get_site_customize_string(python_version: str) -> str:
+        """Get a formatted string
+
+        Parameters
+        ----------
+        python_version : str
+            _description_
+
+        Returns
+        -------
+        str
+            _description_
+        """
+        return f"append-path      PYTHON_SITE_PACKAGES    $venv/lib/python{python_version}/site-packages"
 
     def get_extra_paths_string(self) -> str:
         """Convert TOML inputs for tool.pydev.modulefile.extra-paths into a single
@@ -104,10 +126,15 @@ class ModulefileInputs:
         return self.inputs.get("extra-paths", [])
 
     @property
+    def site_customize(self) -> list[str]:
+        return self.inputs.get("site-customize", True)
+
+    @property
     def modulefile_path(self):
         path = self.inputs.get("modulefile_path", None)
         if path:
             return self.root_directory.joinpath(path).resolve()
+
 
 MODULEFILE_TEMPLATE = """#%Module
 
@@ -132,8 +159,8 @@ foreach mod $necessary {{
 # Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work 
 # when loading multiple venv modulefiles
 prepend-path	 PATH                    $venv/bin
-append-path      PYTHON_SITE_PACKAGES    $venv/lib/python{python_version}/site-packages
 append-path	     PYTHONPATH              $venv/lib/python{python_version}/site-packages
+{site_customize_string}
 {extra_paths_string}
 
 """  # noqa: E501
