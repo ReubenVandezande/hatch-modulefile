@@ -17,14 +17,14 @@ class ModulefileBuildHook(BuildHookInterface):
         super().__init__(*args, **kwargs)
 
         self.__modulefile_path = None
-        self.__modulefile_inputs = None
+        self.__inputs = None
 
     @property
-    def modulefile_inputs(self) -> ModulefileInputs:
-        if self.__modulefile_inputs is None:
-            self.__modulefile_inputs = ModulefileInputs(self.config, Path.cwd())
+    def inputs(self) -> ModulefileInputs:
+        if self.__inputs is None:
+            self.__inputs = ModulefileInputs(self.config, Path.cwd())
 
-        return self.__modulefile_inputs
+        return self.__inputs
 
     def initialize(self, version: str, build_data: dict[str, str]):
         if self.target_name != "wheel":
@@ -41,6 +41,10 @@ class ModulefileBuildHook(BuildHookInterface):
         else:
             build_data["force_include"][str(modulefile_path)] = file_name
 
+        if self.inputs.site_customize:
+            self.generate_site_customize(version, build_data)
+
+    def generate_site_customize(self, version: str, build_data: dict[str,str]):
         # Add sitecustomize file to force multiple site-packages to load
         site_customize_path = Path(__file__).parent.joinpath("_sitecustomize.py")
         if version == "editable":  # no cov
@@ -56,9 +60,9 @@ class ModulefileBuildHook(BuildHookInterface):
         Path
             Path to temporary modulefile
         """
-        modulefile_path = self.modulefile_inputs.modulefile_path
-        if self.modulefile_inputs.modulefile_path is not None:
-            modulefile_path = self.modulefile_inputs.modulefile_path
+        modulefile_path = self.inputs.modulefile_path
+        if self.inputs.modulefile_path is not None:
+            modulefile_path = self.inputs.modulefile_path
             if not modulefile_path.exists():
                 msg = f"Cannot find specified modulefile: {modulefile_path}"
                 raise ValueError(msg)
@@ -66,7 +70,7 @@ class ModulefileBuildHook(BuildHookInterface):
             file_descriptor, modulefile_path = tempfile.mkstemp()
             self.__modulefile_path = modulefile_path
             with open(file_descriptor, "w") as file_handle:
-                file_handle.write(self.modulefile_inputs.generate_modulefile_string())
+                file_handle.write(self.inputs.generate_modulefile_string())
 
         return Path(modulefile_path)
 
