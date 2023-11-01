@@ -28,7 +28,7 @@ class ModulefileInputs:
             python_version = platform.python_version().rsplit(".", 1)[0]
 
         if self.site_customize:
-            site_customize_string = self.get_site_customize_string()
+            site_customize_string = self.get_site_customize_string(python_version)
         else:
             site_customize_string = ""
 

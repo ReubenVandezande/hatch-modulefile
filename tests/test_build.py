@@ -12,7 +12,7 @@ def test_modulefile(new_project: Path):
     build_project()
     install_directory = install_project_venv()
 
-    site_customize = install_directory.joinpath("lib", "python3.7", "site-packages", "_sitecustomize.py") # TODO: hard coded for python/3.7
+    site_customize = install_directory.joinpath("lib", "python3.7", "site-packages", "sitecustomize.py") # TODO: hard coded for python/3.7
     assert site_customize.exists()
 
     modulefile = install_directory.joinpath("lib", "python3.7", "site-packages", "modulefiles", "my-app") # TODO: hard coded for python/3.7
@@ -25,21 +25,12 @@ def test_modulefile(new_project: Path):
     assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
     assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
     assert get_setting(text, "append-path") == [
-        ["PYTHON_SITE_PACKAGES", "$venv/lib/python3.7/site-packages"],
         ["PYTHONPATH", "$venv/lib/python3.7/site-packages"],
+        ["PYTHON_SITE_PACKAGES", "$venv/lib/python3.7/site-packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"]
     ]
 
     assert requirements == ["python/3.7", "my_module"]
-
-
-def get_setting(text: str, key: str) -> list[tuple[str, str]]:
-    environments = []
-    for line in text.splitlines():
-        if line.startswith(key):
-            environments.append(line.split()[1:])
-
-    return environments
 
 
 @pytest.mark.slow
@@ -47,9 +38,9 @@ def test_modulefile_no_site_customize(new_project_no_site_customize: Path):
     build_project()
     install_directory = install_project_venv()
 
-    site_customize = install_directory.joinpath("lib", "python3.7", "site-packages", "_sitecustomize.py") # TODO: hard coded for python/3.7
+    site_customize = install_directory.joinpath("lib", "python3.7", "site-packages", "sitecustomize.py") # TODO: hard coded for python/3.7
     assert not site_customize.exists()
-    
+
     modulefile = install_directory.joinpath("lib", "python3.7", "site-packages", "modulefiles", "my-app") # TODO: hard coded for python/3.7
     assert modulefile.exists()
 
