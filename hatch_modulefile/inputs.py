@@ -26,6 +26,8 @@ class ModulefileInputs:
         """
         if python_version is None:
             python_version = platform.python_version().rsplit(".", 1)[0]
+        else:
+            python_version = ".".join(python_version.split(".", 2)[:2])
 
         if self.site_customize:
             site_customize_string = self.get_site_customize_string(python_version)
@@ -33,7 +35,7 @@ class ModulefileInputs:
             site_customize_string = ""
 
         return MODULEFILE_TEMPLATE.format(
-            python_version=platform.python_version().rsplit(".", 1)[0],
+            python_version=python_version,
             requires_string=self.get_requires_string(),
             site_customize_string=site_customize_string,
             extra_paths_string=self.get_extra_paths_string(),
@@ -83,16 +85,12 @@ class ModulefileInputs:
             value = entry["value"]
 
             # Try and convert a common name to the TCL requirement
-            if entry_type not in types:
-                validated_type = entry_type
-            else:
-                validated_type = types[entry_type]
+            validated_type = types.get(entry_type, entry_type)
 
             all_strings.append(f"{validated_type.ljust(15)} {variable.ljust(23)} {value}")
 
         if all_strings:
             all_strings.insert(0, "\n# Extra module path requirements")
-
         return "\n".join(all_strings)
 
     def get_requires_string(self) -> str:
