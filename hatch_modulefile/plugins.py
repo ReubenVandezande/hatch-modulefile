@@ -44,7 +44,7 @@ class ModulefileBuildHook(BuildHookInterface):
         if self.inputs.site_customize:
             self.generate_site_customize(version, build_data)
 
-    def generate_site_customize(self, version: str, build_data: dict[str,str]):
+    def generate_site_customize(self, version: str, build_data: dict[str, str]):
         # Add sitecustomize file to force multiple site-packages to load
         site_customize_path = Path(__file__).parent.joinpath("_sitecustomize.py")
         if version == "editable":  # no cov

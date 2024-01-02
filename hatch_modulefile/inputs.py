@@ -11,7 +11,7 @@ class ModulefileInputs:
 
         self.validate()
 
-    def generate_modulefile_string(self, python_version: str | None=None) -> str:
+    def generate_modulefile_string(self, python_version: str | None = None) -> str:
         """Generates a modulefile and returns a string ready to write to file.
 
         Parameters
@@ -154,7 +154,7 @@ foreach mod $necessary {{
 }}
 
 # Standard python path requirements
-# Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work 
+# Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work
 # when loading multiple venv modulefiles
 prepend-path	 PATH                    $venv/bin
 append-path	     PYTHONPATH              $venv/lib/python{python_version}/site-packages
