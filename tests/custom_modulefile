@@ -9,7 +9,7 @@ prepend-path	 PATH $venv/bin
 setenv		     PYTHON_ROOT $venv
 
 set     necessary       {
-    pythonmy_module
+    my_module
 }
 
 foreach mod $necessary {

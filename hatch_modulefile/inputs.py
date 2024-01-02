@@ -11,7 +11,7 @@ class ModulefileInputs:
 
         self.validate()
 
-    def generate_modulefile_string(self, python_version: str | None = None) -> str:
+    def generate_modulefile_string(self) -> str:
         """Generates a modulefile and returns a string ready to write to file.
 
         Parameters
@@ -24,25 +24,19 @@ class ModulefileInputs:
         str
             Modulefile inputs
         """
-        if python_version is None:
-            python_version = platform.python_version().rsplit(".", 1)[0]
-        else:
-            python_version = ".".join(python_version.split(".", 2)[:2])
-
         if self.site_customize:
-            site_customize_string = self.get_site_customize_string(python_version)
+            site_customize_string = self.get_site_customize_string()
         else:
             site_customize_string = ""
 
         return MODULEFILE_TEMPLATE.format(
-            python_version=python_version,
             requires_string=self.get_requires_string(),
             site_customize_string=site_customize_string,
             extra_paths_string=self.get_extra_paths_string(),
         )
 
     @staticmethod
-    def get_site_customize_string(python_version: str) -> str:
+    def get_site_customize_string() -> str:
         """Get a formatted string
 
         Parameters
@@ -55,7 +49,7 @@ class ModulefileInputs:
         str
             _description_
         """
-        return f"append-path      PYTHON_SITE_PACKAGES    $venv/lib/python{python_version}/site-packages"
+        return f"append-path      PYTHON_SITE_PACKAGES    $site_packages"
 
     def get_extra_paths_string(self) -> str:
         """Convert TOML inputs for tool.pydev.modulefile.extra-paths into a single
@@ -138,6 +132,7 @@ MODULEFILE_TEMPLATE = """#%Module
 
 # Gets the folder two folders up from this file
 set              venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
+set              site_packages           [file normalize $venv/lib/python*/site-packages]
 
 set     necessary       {{
 \t{requires_string}
@@ -157,7 +152,7 @@ foreach mod $necessary {{
 # Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work
 # when loading multiple venv modulefiles
 prepend-path	 PATH                    $venv/bin
-append-path	     PYTHONPATH              $venv/lib/python{python_version}/site-packages
+append-path	     PYTHONPATH              $site_packages
 {site_customize_string}
 {extra_paths_string}
 

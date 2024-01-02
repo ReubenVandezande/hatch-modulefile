@@ -34,6 +34,10 @@ Source = "https://github.com/rvandezande/hatch-modulefile"
 [project.entry-points.hatch]
 modulefile = "hatch_modulefile.hooks"
 
+[tool.hatch.envs.default]
+system-packages = false
+dev-mode = true
+
 [tool.hatch.envs.test]
 dependencies = [
   "coverage[toml]>=6.5",
@@ -49,7 +53,7 @@ test = "python -m pytest {args:tests}"
 path = "hatch_modulefile/__about__.py"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.7", "3.11"]
+python = ["3.11"]
 
 [tool.hatch.envs.lint]
 detached = true
