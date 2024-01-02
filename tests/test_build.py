@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pytest
 
 from .utils import build_project, install_project_venv
 
+python_version = ".".join([str(s) for s in sys.version_info[:2]])
 
 @pytest.mark.slow
 def test_modulefile(new_project: Path):
@@ -13,28 +15,26 @@ def test_modulefile(new_project: Path):
     install_directory = install_project_venv()
 
     site_customize = install_directory.joinpath(
-        "lib", "python3.7", "site-packages", "sitecustomize.py"
-    )  # TODO: hard coded for python/3.7
+        "lib", f"python{python_version}", "site-packages", "sitecustomize.py"
+    )
     assert site_customize.exists()
 
     modulefile = install_directory.joinpath(
-        "lib", "python3.7", "site-packages", "modulefiles", "my-app"
-    )  # TODO: hard coded for python/3.7
+        "lib", f"python{python_version}", "site-packages", "modulefiles", "my-app"
+    )
     assert modulefile.exists()
 
     text = modulefile.read_text()
 
     requirements = [s.strip() for s in text.split("necessary       {\n")[1].split("}", 1)[0].splitlines()]
-    assert requirements == ["python/3.7", "my_module"]
+    assert requirements == ["my_module"]
     assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
     assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
     assert get_setting(text, "append-path") == [
-        ["PYTHONPATH", "$venv/lib/python3.7/site-packages"],
-        ["PYTHON_SITE_PACKAGES", "$venv/lib/python3.7/site-packages"],
+        ["PYTHONPATH", f"$venv/lib/python{python_version}/site-packages"],
+        ["PYTHON_SITE_PACKAGES", f"$venv/lib/python{python_version}/site-packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"],
     ]
-
-    assert requirements == ["python/3.7", "my_module"]
 
 
 @pytest.mark.slow
@@ -43,27 +43,25 @@ def test_modulefile_no_site_customize(new_project_no_site_customize: Path):
     install_directory = install_project_venv()
 
     site_customize = install_directory.joinpath(
-        "lib", "python3.7", "site-packages", "sitecustomize.py"
-    )  # TODO: hard coded for python/3.7
+        "lib", f"python{python_version}", "site-packages", "sitecustomize.py"
+    )
     assert not site_customize.exists()
 
     modulefile = install_directory.joinpath(
-        "lib", "python3.7", "site-packages", "modulefiles", "my-app"
-    )  # TODO: hard coded for python/3.7
+        "lib", f"python{python_version}", "site-packages", "modulefiles", "my-app"
+    )
     assert modulefile.exists()
 
     text = modulefile.read_text()
 
     requirements = [s.strip() for s in text.split("necessary       {\n")[1].split("}", 1)[0].splitlines()]
-    assert requirements == ["python/3.7", "my_module"]
+    assert requirements == ["my_module"]
     assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
     assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
     assert get_setting(text, "append-path") == [
-        ["PYTHONPATH", "$venv/lib/python3.7/site-packages"],
+        ["PYTHONPATH", f"$venv/lib/python{python_version}/site-packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"],
     ]
-
-    assert requirements == ["python/3.7", "my_module"]
 
 
 def get_setting(text: str, key: str) -> list[tuple[str, str]]:

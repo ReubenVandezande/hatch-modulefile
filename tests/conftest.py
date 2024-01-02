@@ -51,7 +51,6 @@ path = "my_app/__init__.py"
 
 [tool.hatch.build.hooks.modulefile]
 requires = [
-    "python/3.7",
     "my_module"
 ]
 extra-paths = [
@@ -99,7 +98,6 @@ path = "my_app/__init__.py"
 
 [tool.hatch.build.hooks.modulefile]
 requires = [
-    "python/3.7",
     "my_module"
 ]
 site-customize = false

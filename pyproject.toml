@@ -20,6 +20,7 @@ classifiers = [
   "Framework :: Hatch",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
   "hatchling>=1.6.0",
@@ -40,8 +41,6 @@ dependencies = [
   "pytest-mock",
   "build[virtualenv]",
 ]
-system-packages = true
-dev_mode = true
 
 [tool.hatch.envs.test.scripts]
 test = "python -m pytest {args:tests}"
@@ -49,8 +48,8 @@ test = "python -m pytest {args:tests}"
 [tool.hatch.version]
 path = "hatch_modulefile/__about__.py"
 
-[[tool.hatch.envs.all.matrix]]
-python = ["3.7"]
+[[tool.hatch.envs.test.matrix]]
+python = ["3.7", "3.11"]
 
 [tool.hatch.envs.lint]
 detached = true
