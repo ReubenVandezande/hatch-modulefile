@@ -132,7 +132,7 @@ MODULEFILE_TEMPLATE = """#%Module
 
 # Gets the folder two folders up from this file
 set              venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
-set              site_packages           [file normalize $venv/lib/python*/site-packages]
+set              site_packages           [glob $venv/lib/python*/site-packages]
 
 set     necessary       {{
 \t{requires_string}
