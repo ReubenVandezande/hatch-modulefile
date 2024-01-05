@@ -106,7 +106,6 @@ MODULEFILE_TEMPLATE = """#%Module
 
 # Gets the folder two folders up from this file
 set              venv                    [file dirname [file dirname [file dirname [file normalize $ModulesCurrentModulefile/___]]]]
-set              site_packages           [glob $venv/lib/python*/site-packages]
 
 set     necessary       {{
 \t{requires_string}
@@ -122,12 +121,8 @@ foreach mod $necessary {{
 \t}}
 }}
 
-if {{ [module-info mode load] || [module-info mode switch2] }} {{
-\tputs stdout "source $venv/bin/activate;"
-}} elseif {{ [module-info mode remove] && ![module-info mode switch3] }} {{
-\tputs stdout "deactivate;"
-}}
-
+setenv VIRTUAL_ENV $venv
+prepend-path PATH $venv/bin
 {extra_paths_string}
 
 """  # noqa: E501
