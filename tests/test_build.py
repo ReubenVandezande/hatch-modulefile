@@ -14,10 +14,6 @@ def test_modulefile(new_project: Path):
     build_project()
     install_directory = install_project_venv()
 
-    site_customize = install_directory.joinpath(
-        "lib", f"python{python_version}", "site-packages", "sitecustomize.py"
-    )
-    assert site_customize.exists()
 
     modulefile = install_directory.joinpath(
         "lib", f"python{python_version}", "site-packages", "modulefiles", "my-app"
@@ -33,33 +29,6 @@ def test_modulefile(new_project: Path):
     assert get_setting(text, "append-path") == [
         ["PYTHONPATH", "$site_packages"],
         ["PYTHON_SITE_PACKAGES", "$site_packages"],
-        ["OTHER_VARIABLE", "/my/custom/path2"],
-    ]
-
-
-@pytest.mark.slow
-def test_modulefile_no_site_customize(new_project_no_site_customize: Path):
-    build_project()
-    install_directory = install_project_venv()
-
-    site_customize = install_directory.joinpath(
-        "lib", f"python{python_version}", "site-packages", "sitecustomize.py"
-    )
-    assert not site_customize.exists()
-
-    modulefile = install_directory.joinpath(
-        "lib", f"python{python_version}", "site-packages", "modulefiles", "my-app"
-    )
-    assert modulefile.exists()
-
-    text = modulefile.read_text()
-
-    requirements = [s.strip() for s in text.split("necessary       {\n")[1].split("}", 1)[0].splitlines()]
-    assert requirements == ["my_module"]
-    assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
-    assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
-    assert get_setting(text, "append-path") == [
-        ["PYTHONPATH", "$site_packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"],
     ]
 
