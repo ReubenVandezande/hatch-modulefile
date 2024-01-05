@@ -8,7 +8,8 @@
 This provides automatic modulefile generation for [EnvironmentModules](https://modules.readthedocs.io/en/latest/). Modulefiles are created with a basic template which:
 
 1. Loads any modules listed in `requires`
-2. Sources the activate script of the installed packages (assumes venv installation)
+2. Sources the activate script of the installed packages (assumes venv installation). Does this by
+setting VIRUTAL_ENV and prepending the bin folder to PATH
 3. Sets extra environment variables defined in extra-paths
 
 **Table of Contents**
@@ -64,11 +65,8 @@ foreach mod $necessary {
     }
 }
 
-if { [module-info mode load] || [module-info mode switch2] } {
-    puts stdout "source $venv/bin/activate;"
-} elseif { [module-info mode remove] && ![module-info mode switch3] } {
-    puts stdout "deactivate;"
-}
+setenv VIRTUAL_ENV $venv
+prepend-path PATH $venv/bin
 
 # Extra module path requirements
 setenv          NUMEXPR_MAX_THREADS     8
