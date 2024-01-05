@@ -122,11 +122,11 @@ foreach mod $necessary {{
 \t}}
 }}
 
-if { [module-info mode load] || [module-info mode switch2] } {
-    puts stdout "source $venv/bin/activate;"
-} elseif { [module-info mode remove] && ![module-info mode switch3] } {
-    puts stdout "deactivate;"
-}
+if {{ [module-info mode load] || [module-info mode switch2] }} {{
+\tputs stdout "source $venv/bin/activate;"
+}} elseif {{ [module-info mode remove] && ![module-info mode switch3] }} {{
+\tputs stdout "deactivate;"
+}}
 
 # Standard python path requirements
 # Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work

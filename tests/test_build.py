@@ -25,10 +25,8 @@ def test_modulefile(new_project: Path):
     requirements = [s.strip() for s in text.split("necessary       {\n")[1].split("}", 1)[0].splitlines()]
     assert requirements == ["my_module"]
     assert get_setting(text, "setenv") == [["QT_XCB_GL_INTEGRATION", "none"]]
-    assert get_setting(text, "prepend-path") == [["PATH", "$venv/bin"], ["PATH", "/my/custom/path"]]
+    assert get_setting(text, "prepend-path") == [["PATH", "/my/custom/path"]]
     assert get_setting(text, "append-path") == [
-        ["PYTHONPATH", "$site_packages"],
-        ["PYTHON_SITE_PACKAGES", "$site_packages"],
         ["OTHER_VARIABLE", "/my/custom/path2"],
     ]
 

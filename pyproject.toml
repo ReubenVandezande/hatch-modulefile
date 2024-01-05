@@ -42,7 +42,6 @@ dev-mode = true
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
-  "pytest-mock",
   "build[virtualenv]",
 ]
 
