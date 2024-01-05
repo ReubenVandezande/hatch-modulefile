@@ -128,9 +128,6 @@ if {{ [module-info mode load] || [module-info mode switch2] }} {{
 \tputs stdout "deactivate;"
 }}
 
-# Standard python path requirements
-# Note the PYTHON_SITE_PACKAGES is required to make venv + .pth files work
-# when loading multiple venv modulefiles
 {extra_paths_string}
 
 """  # noqa: E501
